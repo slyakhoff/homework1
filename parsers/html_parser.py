@@ -19,3 +19,6 @@ class HtmlParser(Parser):
 
         # Your code here
         return [dict()]
+
+    def get_links_list(self, links_list, data):
+        pass
