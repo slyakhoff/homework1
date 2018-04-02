@@ -121,11 +121,12 @@ pep8 .
 """
 
 import logging
-
+import pandas as pd
 import sys
 
 from scrappers.scrapper import Scrapper
 from storages.file_storage import FileStorage
+from parsers import html_parser
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -133,16 +134,24 @@ logger = logging.getLogger(__name__)
 
 SCRAPPED_FILE = 'scrapped_data.txt'
 TABLE_FORMAT_FILE = 'data.csv'
-
+START_SCRAPING_PAGE = 'https://www.avito.ru/sankt-peterburg/avtomobili/s_probegom/ne_bityy/inomarki?###p=1###&user=1&view=list'
+DOMEN = "https://www.avito.ru"
 
 def gather_process():
     logger.info("gather")
     storage = FileStorage(SCRAPPED_FILE)
-
+    parser = html_parser.HtmlParser(fields=[])
     # You can also pass a storage
-    scrapper = Scrapper()
-    scrapper.scrap_process(storage)
-
+    #data_dict = {'marka' : [], 'model' : [], 'price' : [], 'year' : [], 'probeg' : [], 'owners' : [], 'photo_len' : []}
+    index = 1
+    flag = True
+    while index < 10 and flag :
+        scrapper = Scrapper()
+        url = START_SCRAPING_PAGE.replace('###p=1###','p='+str(index))
+        response = scrapper.scrap_process(url=url)
+        data = parser.get_parsed_data(response.text, DOMEN)
+        index += 1
+        flag = False
 
 def convert_data_to_table_format():
     logger.info("transform")
@@ -168,13 +177,15 @@ if __name__ == '__main__':
     """
     logger.info("Work started")
 
-    if sys.argv[1] == 'gather':
-        gather_process()
+    #if sys.argv[1] == 'gather':
+    gather_process()
 
+    """
     elif sys.argv[1] == 'transform':
         convert_data_to_table_format()
 
     elif sys.argv[1] == 'stats':
         stats_of_data()
+    """
 
     logger.info("work ended")
