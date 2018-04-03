@@ -166,6 +166,7 @@ def gather_process_test():
 
 def convert_data_to_table_format():
     logger.info("transform")
+    print('Oops!')
 
     # Your code here
     # transform gathered data from txt file to pandas DataFrame and save as csv
