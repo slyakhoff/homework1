@@ -144,14 +144,25 @@ def gather_process():
     # You can also pass a storage
     #data_dict = {'marka' : [], 'model' : [], 'price' : [], 'year' : [], 'probeg' : [], 'owners' : [], 'photo_len' : []}
     index = 1
-    flag = True
-    while index < 10 and flag :
+    while index < 10:
         scrapper = Scrapper()
         url = START_SCRAPING_PAGE.replace('###p=1###','p='+str(index))
         response = scrapper.scrap_process(url=url)
         data = parser.get_parsed_data(response.text, DOMEN)
         index += 1
-        flag = False
+
+
+def gather_process_test():
+    logger.info("gather")
+    storage = FileStorage(SCRAPPED_FILE)
+    parser = html_parser.HtmlParser(fields=[])
+    # You can also pass a storage
+    # data_dict = {'marka' : [], 'model' : [], 'price' : [], 'year' : [], 'probeg' : [], 'owners' : [], 'photo_len' : []}
+    scrapper = Scrapper()
+    url = START_SCRAPING_PAGE.replace('###p=1###', 'p=1')
+    response = scrapper.scrap_process(url=url)
+    data = parser.get_parsed_data_test(response.text, DOMEN)
+
 
 def convert_data_to_table_format():
     logger.info("transform")
@@ -163,7 +174,11 @@ def convert_data_to_table_format():
 
 def stats_of_data():
     logger.info("stats")
-
+    frame = pd.read_csv(filepath_or_buffer='data1.csv',
+                names=['id', 'marka', 'model', 'price', 'year', 'photo_len', 'probeg', 'owners', 'dicskription_len'])
+    print(frame.head(10))
+    print(frame.describe())
+    del(frame)
     # Your code here
     # Load pandas DataFrame and print to stdout different statistics about the data.
     # Try to think about the data and use not only describe and info.
@@ -177,15 +192,14 @@ if __name__ == '__main__':
     """
     logger.info("Work started")
 
-    #if sys.argv[1] == 'gather':
-    gather_process()
-
-    """
+    if sys.argv[1] == 'gather':
+        #gather_process()
+        gather_process_test()
+        pass
     elif sys.argv[1] == 'transform':
         convert_data_to_table_format()
-
     elif sys.argv[1] == 'stats':
         stats_of_data()
-    """
+
 
     logger.info("work ended")

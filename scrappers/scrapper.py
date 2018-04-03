@@ -1,5 +1,5 @@
-import socks
-import socket
+#import socks
+#import socket
 import logging
 import requests
 
@@ -14,8 +14,9 @@ class Scrapper(object):
 
     def scrap_process(self, url, storage = None):
         #for tor service
-        socks.set_default_proxy(socks.SOCKS5, "localhost", 9050)
-        socket.socket = socks.socksocket
+        #socks.set_default_proxy(socks.SOCKS5, "localhost", 9050)
+        #socket.socket = socks.socksocket
+
         # You can iterate over ids, or get list of objects
         # from any API, or iterate throught pages of any site
         # Do not forget to skip already gathered data
